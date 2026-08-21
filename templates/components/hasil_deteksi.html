@@ -1,0 +1,65 @@
+<div class="kartu-hasil hasil-deteksi">
+  <div class="hasil-deteksi__foto">
+    <img src="{{ url_for('static', filename=gambar_path.split('static/')[-1]) }}" alt="Foto daun yang diunggah">
+  </div>
+
+  <div class="hasil-deteksi__body">
+    {% if status == 'sehat' %}
+      <span class="lencana lencana--hijau">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Tanaman Sehat
+      </span>
+    {% else %}
+      <span class="lencana lencana--hijau">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3c4 3 7 6 7 10a7 7 0 11-14 0c0-4 3-7 7-10z" stroke="currentColor" stroke-width="1.8"/></svg>
+        Penyakit Terdeteksi
+      </span>
+    {% endif %}
+
+    <h2 class="hasil-deteksi__judul">{{ hasil.penyakit }}</h2>
+    <p class="hasil-deteksi__akurasi">Akurasi: <strong>{{ hasil.confidence }}%</strong></p>
+    <p class="hasil-deteksi__deskripsi">{{ hasil.deskripsi }}</p>
+
+    {% if status == 'penyakit' and hasil.keparahan %}
+      {% set kelas_keparahan = hasil.keparahan.lower() %}
+      <div class="keparahan">
+        <div class="keparahan__baris">
+          <span class="keparahan__label">Tingkat Keparahan</span>
+          <span class="keparahan__nilai--{{ kelas_keparahan }}">{{ hasil.keparahan }}</span>
+        </div>
+        <div class="keparahan__track">
+          <div class="keparahan__isi keparahan__isi--{{ kelas_keparahan }}"></div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="info-grid">
+      <div class="info-grid__item">
+        <div class="info-grid__label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3c4 3 7 6 7 10a7 7 0 11-14 0c0-4 3-7 7-10z" stroke="currentColor" stroke-width="1.6"/></svg>
+          Tanaman
+        </div>
+        <div class="info-grid__value">{{ hasil.tanaman }}</div>
+      </div>
+      <div class="info-grid__item">
+        <div class="info-grid__label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Tanggal Deteksi
+        </div>
+        <div class="info-grid__value">{{ hasil.tanggal }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="saran">
+    <div class="saran__judul">{% if status == 'sehat' %}Tips Perawatan{% else %}Saran Penanganan{% endif %}</div>
+    <ul class="saran__daftar">
+      {% for item in hasil.saran %}
+        <li>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 12.5l2.3 2.3L16 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>{{ item }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% include 'components/upload_section.html' %}
+
+  <section class="hasil">
+    <div class="container">
+      <h2 class="hasil__heading">Hasil Prediksi</h2>
+
+      {% if status in ['sehat', 'penyakit'] %}
+        {% include 'components/hasil_deteksi.html' %}
+      {% else %}
+        {% include 'components/hasil_kosong.html' %}
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

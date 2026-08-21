@@ -1,0 +1,205 @@
+from flask import Flask, render_template, request
+from werkzeug.utils import secure_filename
+import tensorflow as tf
+import numpy as np
+from PIL import Image
+import pickle
+import os
+from datetime import datetime
+
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB, sesuai teks di UI
+
+EKSTENSI_DIIZINKAN = {'jpg', 'jpeg', 'png'}
+AMBANG_KEYAKINAN = 60.0  # di bawah ini dianggap "Belum Dapat Dideteksi"
+
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+model = tf.keras.models.load_model('model_plant_disease.h5')
+
+with open('nama_kelas.pkl', 'rb') as f:
+    nama_kelas = pickle.load(f)
+
+# ---------------------------------------------------------------------------
+# Metadata tiap kelas hasil prediksi (dataset PlantVillage subset: Tomat,
+# Kentang, Paprika). Dipakai untuk mengisi kartu Hasil Prediksi di UI.
+# ---------------------------------------------------------------------------
+INFO_KELAS = {
+    'Pepper__bell___Bacterial_spot': {
+        'tanaman': 'Paprika', 'penyakit': 'Bercak Bakteri (Bacterial Spot)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh bakteri Xanthomonas campestris yang menyerang daun dan buah, ditandai bercak kecil kehitaman dengan tepi kekuningan.',
+        'saran': ['Buang dan musnahkan bagian tanaman yang terinfeksi', 'Semprotkan bakterisida berbahan tembaga',
+                   'Hindari penyiraman dari atas daun', 'Jaga jarak tanam agar sirkulasi udara baik'],
+    },
+    'Pepper__bell___healthy': {
+        'tanaman': 'Paprika', 'penyakit': 'Tanaman Sehat',
+        'sehat': True, 'keparahan': None,
+        'deskripsi': 'Daun paprika tidak menunjukkan tanda-tanda penyakit. Warna dan tekstur daun terlihat normal.',
+        'saran': ['Lanjutkan penyiraman secara teratur', 'Pastikan tanaman tetap mendapat sinar matahari cukup',
+                   'Lakukan pemupukan berkala', 'Periksa daun secara rutin untuk deteksi dini'],
+    },
+    'Potato___Early_blight': {
+        'tanaman': 'Kentang', 'penyakit': 'Bercak Awal (Early Blight)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh jamur Alternaria solani, muncul sebagai bercak cokelat bercincin konsentris pada daun tua terlebih dahulu.',
+        'saran': ['Buang daun yang terinfeksi berat', 'Gunakan fungisida yang sesuai',
+                   'Terapkan rotasi tanaman', 'Hindari kelembapan berlebih di sekitar tanaman'],
+    },
+    'Potato___Late_blight': {
+        'tanaman': 'Kentang', 'penyakit': 'Busuk Daun (Late Blight)',
+        'sehat': False, 'keparahan': 'Tinggi',
+        'deskripsi': 'Disebabkan oleh Phytophthora infestans, ditandai bercak basah kehitaman yang menyebar cepat dan bisa merusak seluruh tanaman.',
+        'saran': ['Segera buang dan musnahkan bagian yang terinfeksi', 'Semprotkan fungisida segera setelah gejala terlihat',
+                   'Perbaiki drainase dan sirkulasi udara', 'Hindari penyiraman pada sore/malam hari'],
+    },
+    'Potato___healthy': {
+        'tanaman': 'Kentang', 'penyakit': 'Tanaman Sehat',
+        'sehat': True, 'keparahan': None,
+        'deskripsi': 'Daun kentang tidak menunjukkan tanda-tanda penyakit. Warna dan tekstur daun terlihat normal.',
+        'saran': ['Lanjutkan penyiraman secara teratur', 'Jaga kelembapan tanah tetap stabil',
+                   'Lakukan pemupukan berkala', 'Periksa daun secara rutin untuk deteksi dini'],
+    },
+    'Tomato_Bacterial_spot': {
+        'tanaman': 'Tomat', 'penyakit': 'Bercak Bakteri (Bacterial Spot)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh bakteri Xanthomonas, muncul sebagai bercak kecil gelap dan berair pada daun dan buah.',
+        'saran': ['Buang bagian tanaman yang terinfeksi', 'Semprotkan bakterisida berbahan tembaga',
+                   'Hindari bekerja di kebun saat daun basah', 'Gunakan benih/bibit bersertifikat sehat'],
+    },
+    'Tomato_Early_blight': {
+        'tanaman': 'Tomat', 'penyakit': 'Bercak Awal (Early Blight)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh jamur Alternaria solani, bercak cokelat bercincin konsentris muncul lebih dulu pada daun bagian bawah.',
+        'saran': ['Buang daun tua yang terinfeksi', 'Gunakan fungisida yang sesuai',
+                   'Jaga sirkulasi udara di sekitar tanaman', 'Lakukan rotasi tanaman secara berkala'],
+    },
+    'Tomato_Late_blight': {
+        'tanaman': 'Tomat', 'penyakit': 'Busuk Daun (Late Blight)',
+        'sehat': False, 'keparahan': 'Tinggi',
+        'deskripsi': 'Disebabkan oleh Phytophthora infestans, bercak basah kehitaman menyebar cepat dan dapat mematikan tanaman dalam beberapa hari.',
+        'saran': ['Segera buang dan musnahkan bagian yang terinfeksi', 'Semprotkan fungisida secepatnya',
+                   'Perbaiki drainase dan jarak tanam', 'Hindari penyiraman dari atas daun'],
+    },
+    'Tomato_Leaf_Mold': {
+        'tanaman': 'Tomat', 'penyakit': 'Jamur Daun (Leaf Mold)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh jamur Passalora fulva, ditandai bercak kuning di permukaan atas daun dan lapisan jamur di bagian bawah.',
+        'saran': ['Kurangi kelembapan di area tanam', 'Tingkatkan sirkulasi udara/ventilasi',
+                   'Gunakan fungisida bila diperlukan', 'Hindari penyiraman langsung ke daun'],
+    },
+    'Tomato_Septoria_leaf_spot': {
+        'tanaman': 'Tomat', 'penyakit': 'Bercak Daun (Cercospora/Septoria)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh jamur Septoria yang menyerang daun tanaman, gejalanya berupa bercak cokelat keabu-abuan dengan tepi yang jelas.',
+        'saran': ['Buang daun yang terinfeksi berat', 'Gunakan fungisida yang sesuai',
+                   'Jaga sirkulasi udara dan kelembapan', 'Lakukan rotasi tanaman secara berkala'],
+    },
+    'Tomato_Spider_mites_Two_spotted_spider_mite': {
+        'tanaman': 'Tomat', 'penyakit': 'Tungau Laba-laba (Spider Mites)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Serangan hama tungau kecil yang membuat daun berbintik kuning dan muncul jaring halus di permukaan daun.',
+        'saran': ['Semprotkan air bertekanan untuk merontokkan tungau', 'Gunakan akarisida/miticide bila serangan berat',
+                   'Jaga kelembapan udara di sekitar tanaman', 'Periksa daun secara rutin, terutama bagian bawah'],
+    },
+    'Tomato__Target_Spot': {
+        'tanaman': 'Tomat', 'penyakit': 'Bercak Target (Target Spot)',
+        'sehat': False, 'keparahan': 'Sedang',
+        'deskripsi': 'Disebabkan oleh jamur Corynespora cassiicola, bercak cokelat bercincin menyerupai sasaran tembak pada daun dan buah.',
+        'saran': ['Buang daun yang terinfeksi', 'Gunakan fungisida yang sesuai',
+                   'Jaga jarak tanam untuk sirkulasi udara', 'Hindari kelembapan berlebih pada malam hari'],
+    },
+    'Tomato__Tomato_YellowLeaf__Curl_Virus': {
+        'tanaman': 'Tomat', 'penyakit': 'Virus Kuning Keriting (Yellow Leaf Curl Virus)',
+        'sehat': False, 'keparahan': 'Tinggi',
+        'deskripsi': 'Disebabkan oleh virus yang ditularkan kutu kebul (whitefly), menyebabkan daun menguning, mengeriting, dan pertumbuhan terhambat.',
+        'saran': ['Cabut dan musnahkan tanaman yang terinfeksi berat', 'Kendalikan populasi kutu kebul sebagai vektor',
+                   'Gunakan mulsa reflektif untuk mengusir vektor', 'Tanam varietas yang tahan virus bila memungkinkan'],
+    },
+    'Tomato__Tomato_mosaic_virus': {
+        'tanaman': 'Tomat', 'penyakit': 'Virus Mosaik (Mosaic Virus)',
+        'sehat': False, 'keparahan': 'Tinggi',
+        'deskripsi': 'Virus yang menyebabkan pola belang hijau muda-tua pada daun serta pertumbuhan tanaman yang terhambat.',
+        'saran': ['Cabut dan musnahkan tanaman yang terinfeksi', 'Cuci tangan dan alat sebelum menyentuh tanaman lain',
+                   'Kendalikan serangga vektor di sekitar lahan', 'Gunakan benih bebas virus untuk penanaman berikutnya'],
+    },
+    'Tomato_healthy': {
+        'tanaman': 'Tomat', 'penyakit': 'Tanaman Sehat',
+        'sehat': True, 'keparahan': None,
+        'deskripsi': 'Daun tomat tidak menunjukkan tanda-tanda penyakit. Warna dan tekstur daun terlihat normal.',
+        'saran': ['Lanjutkan penyiraman secara teratur', 'Pastikan tanaman mendapat sinar matahari cukup',
+                   'Lakukan pemupukan berkala', 'Periksa daun secara rutin untuk deteksi dini'],
+    },
+}
+
+BULAN_ID = ['', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+
+
+def format_tanggal_indonesia(dt):
+    return f"{dt.day} {BULAN_ID[dt.month]} {dt.year}, {dt.strftime('%H:%M')}"
+
+
+def ekstensi_diizinkan(nama_file):
+    return '.' in nama_file and nama_file.rsplit('.', 1)[1].lower() in EKSTENSI_DIIZINKAN
+
+
+def prediksi_gambar(path_gambar):
+    img = Image.open(path_gambar).convert('RGB')
+    img = img.resize((256, 256))
+    img_array = np.array(img)
+    img_array = np.expand_dims(img_array, axis=0)
+
+    prediksi = model.predict(img_array)
+    indeks_kelas = np.argmax(prediksi[0])
+    confidence = float(prediksi[0][indeks_kelas]) * 100
+
+    return nama_kelas[indeks_kelas], confidence
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    hasil = None
+    gambar_path = None
+    # status: 'kosong' (belum upload) | 'gagal' | 'sehat' | 'penyakit'
+    status = 'kosong'
+
+    if request.method == 'POST':
+        file = request.files.get('gambar')
+
+        if file and file.filename and ekstensi_diizinkan(file.filename):
+            nama_file = secure_filename(file.filename)
+            gambar_path = os.path.join(app.config['UPLOAD_FOLDER'], nama_file)
+            file.save(gambar_path)
+
+            kelas_prediksi, confidence = prediksi_gambar(gambar_path)
+
+            if confidence < AMBANG_KEYAKINAN:
+                status = 'gagal'
+                hasil = {'confidence': round(confidence, 2)}
+            else:
+                info = INFO_KELAS.get(kelas_prediksi)
+                if info is None:
+                    status = 'gagal'
+                    hasil = {'confidence': round(confidence, 2)}
+                else:
+                    status = 'sehat' if info['sehat'] else 'penyakit'
+                    hasil = {
+                        'tanaman': info['tanaman'],
+                        'penyakit': info['penyakit'],
+                        'deskripsi': info['deskripsi'],
+                        'saran': info['saran'],
+                        'keparahan': info['keparahan'],
+                        'confidence': round(confidence, 2),
+                        'tanggal': format_tanggal_indonesia(datetime.now()),
+                    }
+        else:
+            status = 'gagal'
+            hasil = {'confidence': 0}
+
+    return render_template('index.html', hasil=hasil, gambar_path=gambar_path, status=status)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)

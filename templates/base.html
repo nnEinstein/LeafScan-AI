@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}LeafScan AI — Deteksi Penyakit Tanaman{% endblock %}</title>
+  <meta name="description" content="Unggah foto daun tanaman dan dapatkan deteksi penyakit secara instan dengan LeafScan AI.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a href="#konten-utama" class="skip-link">Lompat ke konten utama</a>
+
+  {% include 'components/navbar.html' %}
+
+  <main id="konten-utama">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'components/footer.html' %}
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

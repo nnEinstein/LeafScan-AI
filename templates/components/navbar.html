@@ -1,0 +1,24 @@
+<header class="navbar">
+  <div class="container navbar__bar">
+    <a href="{{ url_for('index') }}" class="navbar__brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C7 2 3 6 3 11c0 5.5 4.5 9.5 8.4 10.8.4.1.8.1 1.2 0C16.5 20.5 21 16.5 21 11c0-5-4-9-9-9z" fill="#16a34a"/>
+        <path d="M12 6v11M12 9c-2-2-5-2-6.5-1M12 13c2-2 5-1.5 6 0" stroke="#f0fdf4" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      LeafScan AI
+    </a>
+
+    <button class="navbar__toggle" id="navbar-toggle" aria-label="Buka menu" aria-expanded="false" aria-controls="navbar-menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <nav class="navbar__menu" id="navbar-menu">
+      <a href="{{ url_for('index') }}" class="navbar__link is-active">Deteksi</a>
+      <a href="#" class="navbar__link">Penyakit</a>
+      <a href="#" class="navbar__link">Tips</a>
+      <a href="#" class="navbar__link">Tentang</a>
+    </nav>
+  </div>
+</header>
