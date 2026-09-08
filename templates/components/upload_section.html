@@ -1,43 +1,46 @@
-<section class="hero">
-  <div class="container">
-    <h1 class="hero__title">Deteksi Penyakit Tanaman</h1>
-    <p class="hero__subtitle">Unggah gambar daun tanaman Anda untuk mendapatkan prediksi penyakit secara cepat dan akurat.</p>
+<section class="py-9 sm:py-12">
+  <div class="mx-auto max-w-3xl px-4 sm:px-6">
+    <h1 class="text-center font-display text-2xl font-bold text-green-900 sm:text-3xl">Deteksi Penyakit Tanaman</h1>
+    <p class="mx-auto mt-2.5 max-w-lg text-center text-sm text-gray-600 sm:text-base">
+      Unggah gambar daun tanaman Anda untuk mendapatkan prediksi penyakit secara cepat dan akurat.
+    </p>
 
     <form id="form-upload" method="POST" enctype="multipart/form-data">
-      <div class="dropzone" id="dropzone">
-        <div class="dropzone__icon">
+      <div id="dropzone" class="mt-6 rounded-3xl border-2 border-dashed border-green-600 bg-green-50 p-6 text-center transition-colors sm:p-10">
+        <div class="mx-auto mb-3.5 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-700">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
         </div>
 
-        <div class="dropzone__title">Letakkan file di sini</div>
-        <div class="dropzone__or">atau</div>
+        <div class="font-semibold text-gray-900">Letakkan file di sini</div>
+        <div class="my-2.5 text-sm text-gray-400">atau</div>
 
-        <div class="dropzone__actions">
-          <label class="btn btn--primary" for="input-gambar">
+        <div id="dropzone-actions" class="mx-auto flex max-w-[280px] flex-col gap-2.5 transition-opacity">
+          <label class="btn-primary" for="input-gambar">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 5h16v14H4z" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/><path d="M4 16l5-4 4 3 3-2 4 4" stroke="currentColor" stroke-width="1.6"/></svg>
             Pilih Gambar
           </label>
           <input type="file" id="input-gambar" name="gambar" accept="image/png, image/jpeg, image/jpg" hidden>
 
-          <label class="btn btn--outline" for="input-foto">
+          <label class="btn-outline" for="input-foto">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 8h3l2-2h6l2 2h3v11H4z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="13.5" r="3.2" stroke="currentColor" stroke-width="1.6"/></svg>
             Ambil Foto
           </label>
           <input type="file" id="input-foto" name="gambar" accept="image/*" capture="environment" hidden>
         </div>
 
-        <div class="dropzone__loading">
-          <span class="spinner"></span> Menganalisis gambar…
+        <div id="dropzone-loading" class="mt-3.5 hidden items-center justify-center gap-2.5 text-sm font-medium text-green-700">
+          <span class="h-[18px] w-[18px] animate-spin rounded-full border-[2.5px] border-green-100 border-t-green-700"></span>
+          Menganalisis gambar…
         </div>
 
-        <span class="dropzone__filename" id="dropzone-filename" hidden></span>
+        <span id="dropzone-filename" class="mt-3 block break-all text-sm font-medium text-green-700" hidden></span>
       </div>
     </form>
 
-    <div class="dropzone__hint">
+    <div class="mt-3.5 flex items-center justify-center gap-1.5 text-xs text-gray-400">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M12 11v5M12 8v.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       Format: JPG, PNG, JPEG (Maks. 5MB)
     </div>

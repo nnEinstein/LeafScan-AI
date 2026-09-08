@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  h1, h2, h3 {
+    font-family: theme('fontFamily.display');
+  }
+}
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold min-h-[46px];
+  }
+  .btn-primary {
+    @apply btn bg-green-700 text-white hover:bg-green-900;
+  }
+  .btn-outline {
+    @apply btn bg-white text-green-900 border border-gray-200 hover:border-green-600;
+  }
+
+  /* Badges used on the hasil card */
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+  .badge-amber {
+    @apply badge bg-amber-100 text-amber-600;
+  }
+  .badge-green {
+    @apply badge bg-green-100 text-green-700;
+  }
+
+  /* Result card shell */
+  .kartu-hasil {
+    @apply bg-white border border-gray-200 rounded-3xl shadow-[0_4px_20px_rgba(20,83,45,0.08)] overflow-hidden;
+  }
+}

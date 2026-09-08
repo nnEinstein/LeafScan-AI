@@ -10,10 +10,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
 </head>
-<body>
-  <a href="#konten-utama" class="skip-link">Lompat ke konten utama</a>
+<body class="bg-white text-gray-800 antialiased">
+  <a href="#konten-utama"
+     class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[100] focus:bg-green-700 focus:text-white focus:px-4 focus:py-2 focus:rounded-br-lg">
+    Lompat ke konten utama
+  </a>
 
   {% include 'components/navbar.html' %}
 

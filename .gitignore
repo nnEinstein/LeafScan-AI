@@ -1,0 +1,18 @@
+# Python (Virtual Environment & Cache)
+__pycache__/
+venv/
+*.pyc
+
+# Node.js (Dependencies & Output Tailwind)
+node_modules/
+
+# File Environment & Kredensial Rahasia
+.env
+
+# Model Deep Learning & Data (File berukuran besar / hasil training)
+*.h5
+*.pkl
+
+# Log & File Sistem
+*.log
+.DS_Store
