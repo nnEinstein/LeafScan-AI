@@ -244,6 +244,9 @@ def index():
 def penyakit():
     return render_template('penyakit.html', info_kelas=INFO_KELAS)
 
+@app.route('/tentang')
+def tentang():
+    return render_template('tentang.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port='5000', debug=True)
