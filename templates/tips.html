@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Tips & Panduan — LeafScan AI{% endblock %}
+
+{% block content %}
+<section class="bg-green-50/60 py-14 px-4">
+  <div class="max-w-6xl mx-auto text-center">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 font-[Poppins]">Tips &amp; Panduan</h1>
+    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">
+      Panduan praktis supaya hasil deteksi lebih akurat, dan cara mencegah
+      penyakit sebelum menyerang tanamanmu.
+    </p>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 py-12">
+  <div class="mb-8">
+    <h2 class="text-2xl text-[#1C2B22]">Cara Mengambil Foto Daun yang Baik</h2>
+    <p class="mt-2 text-sm text-gray-600 max-w-xl">
+      Foto yang jelas membantu model AI mengenali pola daun dengan lebih akurat.
+      Ikuti langkah berikut sebelum mengunggah foto ke fitur Deteksi.
+    </p>
+  </div>
+
+  <div class="relative pl-10">
+    <div class="absolute left-4 top-2 bottom-2 w-px bg-gray-200"></div>
+
+    {% set steps = [
+      ('Pilih satu daun yang paling jelas gejalanya', 'Fokuskan pada satu helai daun, hindari memotret beberapa daun bertumpuk dalam satu foto — ini bisa membingungkan model saat mendeteksi.'),
+      ('Gunakan pencahayaan alami', 'Ambil foto di bawah cahaya matahari tidak langsung, misalnya di dekat jendela atau di luar ruangan saat teduh. Hindari flash langsung yang membuat warna daun berubah.'),
+      ('Pakai latar belakang polos', 'Letakkan daun di atas permukaan polos seperti kertas putih atau tanah, supaya AI tidak salah mengenali objek lain sebagai bagian dari daun.'),
+      ('Pastikan fokus tajam dan tidak buram', 'Diamkan kamera sejenak sebelum menjepret, dan pastikan bagian yang bergejala terlihat tajam, bukan blur karena gerakan.'),
+      ('Ambil dari jarak dekat namun proporsional', 'Isi sebagian besar frame dengan daun, tapi jangan terlalu dekat sampai bentuk daun terpotong dari tepi foto.')
+    ] %}
+
+    {% for title, desc in steps %}
+    <div class="relative mb-8 last:mb-0">
+      <span class="absolute -left-10 top-0 w-8 h-8 rounded-full bg-[#2F6844] text-white text-sm font-medium
+                   flex items-center justify-center">{{ loop.index }}</span>
+      <h3 class="font-semibold text-[#1C2B22] mb-1">{{ title }}</h3>
+      <p class="text-sm text-gray-600">{{ desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 py-12 border-t border-gray-100">
+  <div class="mb-8">
+    <h2 class="text-2xl text-[#1C2B22]">Tips Pencegahan Penyakit Umum</h2>
+    <p class="mt-2 text-sm text-gray-600 max-w-xl">
+      Mencegah selalu lebih mudah daripada mengobati. Beberapa kebiasaan
+      sederhana ini bisa menekan risiko penyakit pada Paprika, Kentang, dan Tomat.
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+    {% set kategori = [
+      (
+        'Rotasi Tanaman',
+        'M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99',
+        [
+          'Jangan menanam jenis yang sama berturut-turut di lahan yang sama, minimal jeda 2-3 musim tanam',
+          'Gantian dengan tanaman keluarga berbeda untuk memutus siklus hidup patogen di tanah',
+          'Catat riwayat tanam per petak supaya rotasi lebih terjadwal'
+        ]
+      ),
+      (
+        'Sirkulasi Udara & Jarak Tanam',
+        'M3 12h13M3 12l4-4m-4 4 4 4M21 6H10M21 18H10',
+        [
+          'Beri jarak tanam yang cukup supaya udara mengalir bebas antar tanaman',
+          'Pangkas daun bagian bawah yang terlalu rimbun dan menyentuh tanah',
+          'Hindari menanam terlalu rapat terutama saat musim hujan'
+        ]
+      ),
+      (
+        'Sanitasi Alat & Lingkungan',
+        'M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.4 2.245 4.5 4.5 0 0 0 8.4-2.245c0-.399-.078-.78-.22-1.128Zm0 0a15.998 15.998 0 0 0 3.388-1.62m-5.043-.025a15.994 15.994 0 0 1 1.622-3.395m3.42 3.42a15.995 15.995 0 0 0 4.764-4.648l3.876-5.814a1.151 1.151 0 0 0-1.597-1.597L14.146 6.32a15.996 15.996 0 0 0-4.649 4.763m3.42 3.42a6.776 6.776 0 0 0-3.42-3.42',
+          [
+          'Bersihkan gunting dan alat potong sebelum berpindah ke tanaman lain',
+          'Buang dan musnahkan bagian tanaman yang terinfeksi, jangan dikompos sembarangan',
+          'Cuci tangan setelah menangani tanaman yang menunjukkan gejala penyakit'
+        ]
+      ),
+      (
+        'Pengairan & Drainase',
+        'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13.5v6.75m0 0-2.25-2.25M12 14.25l2.25-2.25',
+        [
+          'Siram di pangkal tanaman, hindari membasahi daun secara langsung',
+          'Siram pagi hari supaya daun sempat kering sebelum malam',
+          'Pastikan lahan tidak tergenang air, buat bedengan atau saluran drainase yang baik'
+        ]
+      )
+    ] %}
+
+    {% for judul, icon_path, tips in kategori %}
+    <div class="border border-gray-200 rounded-2xl bg-white p-6" style="border-top: 3px solid #2F6844;">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-[#F0F4F1] flex items-center justify-center flex-shrink-0">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 text-[#2F6844]" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="{{ icon_path }}" />
+          </svg>
+        </div>
+        <h3 class="font-semibold text-[#1C2B22]">{{ judul }}</h3>
+      </div>
+      <ul class="space-y-2">
+        {% for tip in tips %}
+        <li class="flex gap-2.5 text-sm text-gray-600">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#2F6844] flex-shrink-0"></span>
+          <span>{{ tip }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+<section class="bg-green-50/60 py-12 px-4 mt-4">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+    <div>
+      <h2 class="text-xl text-[#1C2B22]">Sudah siap periksa daunmu?</h2>
+      <p class="text-sm text-gray-600 mt-1">Pakai tips di atas, lalu unggah foto ke fitur Deteksi.</p>
+    </div>
+    <a href="{{ url_for('index') }}"
+       class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#2F6844] text-white font-medium
+              hover:bg-[#254f35] transition-colors flex-shrink-0">
+      Mulai Deteksi
+    </a>
+  </div>
+</section>
+
+{% endblock %}

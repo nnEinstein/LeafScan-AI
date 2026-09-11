@@ -248,5 +248,13 @@ def penyakit():
 def tentang():
     return render_template('tentang.html')
 
+@app.route('/tips')
+def tips():
+    return render_template('tips.html')
+
+@app.route('/privasi')
+def privasi():
+    return render_template('privasi.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5000', debug=True)

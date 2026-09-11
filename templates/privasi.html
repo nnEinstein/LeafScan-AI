@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Kebijakan Privasi — LeafScan AI{% endblock %}
+
+{% block content %}
+<section class="bg-green-50/60 py-14 px-4">
+  <div class="max-w-6xl mx-auto text-center">
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 font-[Poppins]">Kebijakan Privasi</h1>
+    <p class="mt-3 text-gray-600 max-w-2xl mx-auto">
+      Terakhir diperbarui: September 2026
+    </p>
+  </div>
+</section>
+
+<section class="max-w-3xl mx-auto px-4 py-12">
+  <div class="border border-gray-200 rounded-2xl bg-white p-8 space-y-8">
+
+    <div>
+      <h2 class="font-semibold text-[#1C2B22] mb-2">Foto yang Kamu Unggah</h2>
+      <p class="text-[15px] text-gray-600">
+        Foto daun yang kamu unggah ke fitur Deteksi hanya digunakan sementara untuk
+        proses analisis oleh model AI. Foto <strong>tidak disimpan secara permanen</strong>
+        di server kami — setelah hasil deteksi ditampilkan, foto akan dihapus.
+      </p>
+    </div>
+
+    <div class="pt-6 border-t border-gray-100">
+      <h2 class="font-semibold text-[#1C2B22] mb-2">Data yang Kami Kumpulkan</h2>
+      <ul class="space-y-2">
+        <li class="flex gap-2.5 text-[15px] text-gray-600">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#2F6844] flex-shrink-0"></span>
+          Foto yang diunggah, hanya untuk kebutuhan pemrosesan deteksi
+        </li>
+        <li class="flex gap-2.5 text-[15px] text-gray-600">
+          <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#2F6844] flex-shrink-0"></span>
+          Kami tidak meminta atau menyimpan data pribadi lain kecuali kamu memberikannya
+          sendiri, misalnya lewat form kontak
+        </li>
+      </ul>
+    </div>
+
+    <div class="pt-6 border-t border-gray-100">
+      <h2 class="font-semibold text-[#1C2B22] mb-2">Berbagi Data ke Pihak Ketiga</h2>
+      <p class="text-[15px] text-gray-600">
+        Kami tidak membagikan, menjual, atau menyewakan foto maupun data lain yang
+        kamu berikan ke pihak ketiga mana pun.
+      </p>
+    </div>
+
+    <div class="pt-6 border-t border-gray-100">
+      <h2 class="font-semibold text-[#1C2B22] mb-2">Perubahan Kebijakan</h2>
+      <p class="text-[15px] text-gray-600">
+        Kebijakan ini dapat diperbarui sewaktu-waktu seiring perkembangan aplikasi.
+        Perubahan akan ditampilkan di halaman ini beserta tanggal pembaruannya.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
