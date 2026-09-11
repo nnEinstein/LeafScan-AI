@@ -13,16 +13,28 @@
       </svg>
     </button>
 
-    <nav id="navbar-menu"
-         class="absolute inset-x-0 top-16 hidden flex-col gap-1 border-b border-gray-200 bg-white px-4 pb-4 shadow-lg
-                md:static md:flex md:flex-row md:gap-8 md:border-none md:bg-transparent md:p-0 md:shadow-none">
-      <a href="{{ url_for('index') }}"
-         class="block border-t border-gray-100 py-3 font-medium text-green-700 md:border-none md:py-0 md:relative md:after:absolute md:after:-bottom-[22px] md:after:left-0 md:after:right-0 md:after:h-0.5 md:after:bg-green-700">
-        Deteksi
-      </a>
-      <a href="#" class="block border-t border-gray-100 py-3 font-medium text-gray-600 hover:text-green-700 md:border-none md:py-0">Penyakit</a>
-      <a href="#" class="block border-t border-gray-100 py-3 font-medium text-gray-600 hover:text-green-700 md:border-none md:py-0">Tips</a>
-      <a href="#" class="block border-t border-gray-100 py-3 font-medium text-gray-600 hover:text-green-700 md:border-none md:py-0">Tentang</a>
-    </nav>
+    {% set nav_items = [
+    ('index', url_for('index'), 'Deteksi'),
+    ('penyakit', url_for('penyakit'), 'Penyakit'),
+    ('#', '#', 'Tips'),
+    ('#', '#', 'Tentang')
+  ] %}
+
+  <nav id="navbar-menu"
+      class="absolute inset-x-0 top-16 hidden flex-col border-b border-gray-100 bg-white px-4 pb-4 shadow-lg
+              md:static md:flex md:flex-row md:items-center md:gap-10 md:border-none md:bg-transparent md:p-0 md:shadow-none">
+
+    {% for endpoint, href, label in nav_items %}
+    {% set is_active = (request.endpoint == endpoint) %}
+    <a href="{{ href }}"
+      class="group relative block border-t border-gray-100 py-3 font-medium transition-colors md:border-none md:py-1
+              {{ 'text-[#2F6844]' if is_active else 'text-gray-600 hover:text-[#2F6844]' }}">
+      {{ label }}
+      <span class="absolute -bottom-1 left-0 hidden h-0.5 bg-[#2F6844] transition-all duration-300 md:block
+                  {{ 'w-full' if is_active else 'w-0 group-hover:w-full' }}"></span>
+    </a>
+    {% endfor %}
+
+  </nav>
   </div>
 </header>

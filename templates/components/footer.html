@@ -1,10 +1,8 @@
 <footer class="bg-green-900 py-10 text-green-100">
   <div class="mx-auto grid max-w-5xl gap-7 px-4 sm:grid-cols-[1.4fr_1fr_1fr] sm:px-6">
     <div>
-      <div class="flex items-center gap-2 font-display text-lg font-bold text-white">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C7 2 3 6 3 11c0 5.5 4.5 9.5 8.4 10.8.4.1.8.1 1.2 0C16.5 20.5 21 16.5 21 11c0-5-4-9-9-9z" fill="#4ade80"/>
-        </svg>
+      <div class="flex items-center gap-3 font-display text-lg font-bold text-white">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo LeafScan AI" class="w-10 rounded-lg">
         LeafScan AI
       </div>
       <p class="mt-2.5 max-w-xs text-sm text-green-100/80">
@@ -16,7 +14,7 @@
       <div class="mb-3 text-sm font-semibold text-white">Link Cepat</div>
       <ul class="flex flex-col gap-2.5 text-sm">
         <li><a href="{{ url_for('index') }}" class="text-green-100/80 hover:text-white">Deteksi</a></li>
-        <li><a href="#" class="text-green-100/80 hover:text-white">Penyakit</a></li>
+        <li><a href="{{ url_for('penyakit') }}" class="text-green-100/80 hover:text-white">Penyakit</a></li>
         <li><a href="#" class="text-green-100/80 hover:text-white">Tips &amp; Panduan</a></li>
       </ul>
     </div>
