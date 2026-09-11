@@ -185,7 +185,7 @@ def index():
 
         if file and file.filename and ekstensi_diizinkan(file.filename):
             nama_file = secure_filename(file.filename)
-            gambar_path = os.path.join(app.config['UPLOAD_FOLDER'], nama_file)
+            gambar_path = os.path.join(app.config['UPLOAD_FOLDER'], nama_file).replace('\\', '/')
             file.save(gambar_path)
 
             kelas_prediksi, confidence = prediksi_gambar(gambar_path)
